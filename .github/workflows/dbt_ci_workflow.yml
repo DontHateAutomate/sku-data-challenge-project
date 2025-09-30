@@ -1,27 +1,33 @@
 name: dbt CI/CD Workflow
-'on':
+
+on:
   pull_request:
-    branches:
-      - main
+    branches: [ "main" ]
+
 jobs:
   dbt_build_and_test:
     runs-on: ubuntu-latest
+
     env:
-      DB_HOST: '${{ secrets.DB_HOST }}'
-      DB_USER: '${{ secrets.DB_USER }}'
-      DB_PASSWORD: '${{ secrets.DB_PASSWORD }}'
-      DB_PORT: '${{ secrets.DB_PORT }}'
-      DB_NAME: '${{ secrets.DB_NAME }}'
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_PORT: ${{ secrets.DB_PORT }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
+
       - name: Install dependencies
         run: |
           pip install dbt-postgres
+
       - name: Configure dbt profile
         run: |
           mkdir -p ~/.dbt
@@ -39,12 +45,15 @@ jobs:
                 schema: public
                 threads: 4
           EOF
+
       - name: Install dbt packages
         working-directory: ./gdp_dbt_project
         run: dbt deps
+
       - name: Test dbt connection
         working-directory: ./gdp_dbt_project
         run: dbt debug
+
       - name: Run dbt build
         working-directory: ./gdp_dbt_project
         run: dbt build
