@@ -31,7 +31,7 @@ jobs:
       - name: Configure dbt profile
         run: |
           mkdir -p ~/.dbt
-          cat << EOF > ~/.dbt/profiles.yml
+          cat <<- 'EOF' > ~/.dbt/profiles.yml
           gdp_dbt_project:
             target: dev
             outputs:
