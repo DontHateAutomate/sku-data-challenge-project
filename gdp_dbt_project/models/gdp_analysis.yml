@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: gdp_analysis
-    description: "Annual GDP analysis for countries since 2000, with growth calculations."
+    description: "FINAL TABLE: Annual GDP data and analysis for all countries since 2000." # <-- Edited this line
     columns:
       - name: country
         tests:
