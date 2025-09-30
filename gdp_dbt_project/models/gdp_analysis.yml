@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: gdp_analysis
+    description: "Annual GDP analysis for countries since 2000, with growth calculations."
+    columns:
+      - name: country
+        tests:
+          - not_null
+      - name: year
+        tests:
+          - not_null
+      - name: gdp
+        tests:
+          - not_null
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments: 
+          combination_of_columns:
+            - country
+            - year
