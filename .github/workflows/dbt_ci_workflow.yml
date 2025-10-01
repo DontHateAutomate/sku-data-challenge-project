@@ -39,7 +39,7 @@ gdp_dbt_project:
       host: "${{ secrets.DB_HOST }}"
       user: "${{ secrets.DB_USER }}"
       password: "${{ secrets.DB_PASSWORD }}"
-      port: ${DB_PORT}
+      port: "${{ secrets.DB_PORT }}"
       dbname: "${{ secrets.DB_NAME }}"
       schema: public
       threads: 4
