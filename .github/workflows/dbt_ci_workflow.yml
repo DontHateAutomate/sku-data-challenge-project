@@ -30,7 +30,20 @@ jobs:
       - name: Configure dbt profile
         run: |
           mkdir -p ~/.dbt
-          echo "gdp_dbt_project:\n  target: dev\n  outputs:\n    dev:\n      type: postgres\n      host: ${{ secrets.DB_HOST }}\n      user: ${{ secrets.DB_USER }}\n      password: ${{ secrets.DB_PASSWORD }}\n      port: ${{ secrets.DB_PORT }}\n      dbname: ${{ secrets.DB_NAME }}\n      schema: public\n      threads: 4" > ~/.dbt/profiles.yml
+          cat <<EOF > ~/.dbt/profiles.yml
+          gdp_dbt_project:
+            target: dev
+            outputs:
+              dev:
+                type: postgres
+                host: ${{ secrets.DB_HOST }}
+                user: ${{ secrets.DB_USER }}
+                password: ${{ secrets.DB_PASSWORD }}
+                port: ${{ secrets.DB_PORT }}
+                dbname: ${{ secrets.DB_NAME }}
+                schema: public
+                threads: 4
+          EOF
 
       - name: Install dbt packages
         run: dbt deps
