@@ -59,4 +59,8 @@ EOF
 
       - name: Test dbt connection
         run: dbt debug
-        working-directory: ./gdp_dbt_project 
+        working-directory: ./gdp_dbt_project
+
+      - name: Run dbt build
+        run: dbt build
+        working-directory: ./gdp_dbt_project
