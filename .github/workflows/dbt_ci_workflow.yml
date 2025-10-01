@@ -31,19 +31,22 @@ jobs:
         run: |
           mkdir -p ~/.dbt
           cat <<EOF > ~/.dbt/profiles.yml
-          gdp_dbt_project:
-            target: dev
-            outputs:
-              dev:
-                type: postgres
-                host: ${{ secrets.DB_HOST }}
-                user: ${{ secrets.DB_USER }}
-                password: ${{ secrets.DB_PASSWORD }}
-                port: ${{ secrets.DB_PORT }}
-                dbname: ${{ secrets.DB_NAME }}
-                schema: public
-                threads: 4
-          EOF
+gdp_dbt_project:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: ${{ secrets.DB_HOST }}
+      user: ${{ secrets.DB_USER }}
+      password: ${{ secrets.DB_PASSWORD }}
+      port: ${{ secrets.DB_PORT }}
+      dbname: ${{ secrets.DB_NAME }}
+      schema: public
+      threads: 4
+EOF
+
+      - name: Show dbt profile (debug)
+        run: cat ~/.dbt/profiles.yml
 
       - name: Install dbt packages
         run: dbt deps
