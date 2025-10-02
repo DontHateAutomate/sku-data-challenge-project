@@ -89,3 +89,25 @@ This part will use dbt to transform the raw data into the final `gdp_analysis` t
     dbt build
     ```
     After this step, the `gdp_analysis` table will be created and validated in your database.
+
+## Project Structure
+
+The repository is organized into two main parts: the data engineering ingestion script and the dbt analytics project.
+
+* `ingestion_script.py`: The main Python script responsible for fetching data from the World Bank API and loading it into the PostgreSQL database.
+* `docker-compose.yml`: Defines the local PostgreSQL service, allowing for a consistent and isolated development environment.
+* `requirements.txt`: Lists the Python dependencies for the data ingestion process.
+* `gdp_dbt_project/`: This directory contains the entire dbt project.
+    * `models/`: Contains the SQL transformation logic. `gdp_analysis.sql` is the key model that builds the final analytics table.
+    * `gdp_analysis.yml`: Defines the data quality tests and documentation for the dbt model.
+* `.github/workflows/`: Contains the CI/CD workflow file for automating tests with GitHub Actions.
+
+## Assumptions Made
+
+* **Data Engineering**: The `ingestion_script.py` is designed to be idempotent. It drops and recreates the `raw_gdp_data` table on each run to ensure a fresh, consistent load of the raw data.
+* **Analytics Engineering**:
+    * GDP growth calculations (`gdp_growth`, `min_gdp_growth_since_2000`, `max_gdp_growth_since_2000`) are partitioned by country to ensure they are calculated independently for each nation.
+    * For the CI/CD pipeline, a cloud-hosted PostgreSQL database was used. This is a standard practice as the temporary, remote GitHub Actions runner cannot access a local database.
+* **Data Visualisation**:
+    * The `sales_status` field was defined based on the `Quantity` and `UnitPrice` columns, where a negative quantity or UnitPrice signifies a "Return."
+    * The "Top Performing SKU" metrics were calculated using a `Line_Value` (`Quantity * UnitPrice`) to measure performance by financial impact (revenue) rather than just the number of units sold.    
