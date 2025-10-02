@@ -25,42 +25,35 @@ jobs:
           python-version: '3.9'
 
       - name: Install dependencies
-        run: pip install dbt-postgres
+        run: |
+          pip install dbt-postgres
 
       - name: Configure dbt profile
         run: |
           mkdir -p ~/.dbt
-          cat > ~/.dbt/profiles.yml <<EOF
-gdp_dbt_project:
-  target: dev
-  outputs:
-    dev:
-      type: postgres
-      host: "${{ secrets.DB_HOST }}"
-      user: "${{ secrets.DB_USER }}"
-      password: "${{ secrets.DB_PASSWORD }}"
-      port: "${{ secrets.DB_PORT }}"
-      dbname: "${{ secrets.DB_NAME }}"
-      schema: public
-      threads: 4
-EOF
-
-      - name: Confirm profiles location
-        run: |
-          echo "Expected profiles.yml location:"
-          echo "$HOME/.dbt/profiles.yml"
-          echo "-------------------------"
-          ls -la ~/.dbt/
-          cat ~/.dbt/profiles.yml
+          cat <<- 'EOF' > ~/.dbt/profiles.yml
+          gdp_dbt_project:
+            target: dev
+            outputs:
+              dev:
+                type: postgres
+                host: ${{ secrets.DB_HOST }}
+                user: ${{ secrets.DB_USER }}
+                password: ${{ secrets.DB_PASSWORD }}
+                port: ${{ secrets.DB_PORT }}
+                dbname: ${{ secrets.DB_NAME }}
+                schema: public
+                threads: 4
+          EOF
 
       - name: Install dbt packages
-        run: dbt deps
         working-directory: ./gdp_dbt_project
+        run: dbt deps
 
       - name: Test dbt connection
-        run: dbt debug
         working-directory: ./gdp_dbt_project
+        run: dbt debug
 
       - name: Run dbt build
-        run: dbt build
         working-directory: ./gdp_dbt_project
+        run: dbt build
